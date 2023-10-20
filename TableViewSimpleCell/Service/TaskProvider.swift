@@ -15,7 +15,7 @@ class TaskProvider{
         
         for i in 0..<100{
             
-            let newTask = Task(description: "Task #\(i+1)", done: false)
+            let newTask = Task(description: "Task #\(i+1)",instructions: "How to do task #\(i+1)", done: false)
             
             all.append(newTask)
         }

@@ -7,7 +7,9 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SecondViewControllerDelegate {
+    
+    private var selectedRow : Int?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -28,9 +30,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.delegate = self
         
-//        for task in TaskProvider.all{
-//            print(task)
-//        }
+        //        for task in TaskProvider.all{
+        //            print(task)
+        //        }
         
     }
     
@@ -43,24 +45,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-            
+        
         var content = cell.defaultContentConfiguration()
         
         let task = TaskProvider.all[indexPath.row]
+        
         content.text = task.description
-       
-    //    content.secondaryText = "This is the secondary text"
-      
+        
+        content.secondaryText = task.instructions
+        
         if task.done {
             content.image = UIImage(systemName: "checkmark")
             content.imageProperties.tintColor = .green
-        
+            
         }else{
             content.image = UIImage(systemName: "square")
             content.imageProperties.tintColor = .red
         }
         
-       // content.image = UIImage(systemName: "house")
+        // content.image = UIImage(systemName: "house")
         
         cell.contentConfiguration = content
         
@@ -75,6 +78,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         print("\(TaskProvider.all[indexPath.row].description) SELECTED!!!")
         
+        self.selectedRow = indexPath.row
+        
+        //to send the text to secondViewController
+        
         //create the enumSegue for Segue and replace this string
         performSegue(withIdentifier: Segue.toSecondViewController, sender: self)
         
@@ -82,6 +89,34 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Segue.toSecondViewController {
+            
+//            if let secondViewController = segue.destination as? SecondViewController{
+                
+            (segue.destination as? SecondViewController)?.selectedRow = self.selectedRow
+                
+            (segue.destination as! SecondViewController).delegate = self
+               
+            if let selectedIndexPath = tableView.indexPathForSelectedRow{
+                    
+              //      let selectedTask = TaskProvider.all[selectedIndexPath.row]
+                    
+               //     secondViewController.selectedItemTitle = selectedTask.description
+                }
+            }
+            
+            
+        }
+        
+    //method from the protocol
+    func refreshTable() {
+        
+        tableView.reloadData()
+    }
+        
 }
+    
+
+
 

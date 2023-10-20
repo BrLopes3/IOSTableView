@@ -8,11 +8,13 @@
 import Foundation
 class Task{
     var description : String
+    var instructions : String
     var done: Bool = false
     
     //constructor
-    init(description: String, done: Bool) {
+    init(description: String, instructions: String, done: Bool) {
         self.description = description
+        self.instructions = instructions
         self.done = done
     }
     
